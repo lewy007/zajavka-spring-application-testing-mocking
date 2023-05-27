@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -13,7 +14,8 @@ import java.math.BigDecimal;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = BeanConfiguration.class)
+//@ContextConfiguration(classes = BeanConfiguration.class)
+@ContextConfiguration(classes = TestBeanConfiguration.class)
 class CapacityCalculationServiceImplTest {
 
     @Autowired
@@ -37,12 +39,14 @@ class CapacityCalculationServiceImplTest {
     void someCalculation() {
         //given
         final var inputData = someInputData();
+        Mockito.when(widthCalculationService.calculate(Mockito.any())).thenReturn(BigDecimal.TEN);
+        Mockito.when(depthCalculationService.calculate(Mockito.any())).thenReturn(new BigDecimal("20"));
 
         //when
         final var result = capacityCalculationService.someCalculation(inputData);
 
         //then
-        Assertions.assertEquals(new BigDecimal("6"), result);
+        Assertions.assertEquals(new BigDecimal("600"), result);
     }
 
     private InputData someInputData() {
